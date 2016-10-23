@@ -139,6 +139,39 @@ public class GameServiceTest {
 		
 	}
 
+	
+	@Test
+	@RunAsClient
+	public void executeQuery() {
+		GameService proxy = target.proxy(GameService.class);
+		String playerName = "salaboy";
+
+		
+		
+		
+		
+		
+		final int numberSessions = proxy.getAllGameSessions().size();
+
+		String id = proxy.newGameSession();
+		assertNotNull(id);
+		List<GameSessionInfo> allGameSessions = proxy.getAllGameSessions();
+		assertEquals(1 + numberSessions, allGameSessions.size());
+		GameSessionInfo sessionInfo = filterSessionsById(id, allGameSessions);
+		assertEquals(id, sessionInfo.getId());
+		assertTrue(sessionInfo.getPlayers().isEmpty());
+
+		proxy.joinGameSession(id, new BasePlayerImpl(playerName));
+
+		allGameSessions = proxy.getAllGameSessions();
+		assertEquals(1, allGameSessions.size());
+		sessionInfo = allGameSessions.get(0);
+		assertEquals(id, sessionInfo.getId());
+		assertTrue(sessionInfo.getPlayers().contains(playerName));
+
+	}
+	
+	
 	private GameSessionInfo filterSessionsById(String id, List<GameSessionInfo> allGameSessions) {
 		for (GameSessionInfo gameSessionInfo : allGameSessions) {
 			if (gameSessionInfo.getId().equals(id)) {

@@ -26,7 +26,10 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import org.drools.game.core.BaseGameConfigurationImpl;
 import org.drools.game.core.BasePlayerConfigurationImpl;
+import org.drools.game.core.api.BaseQueryResult;
 import org.drools.game.core.api.GameSession;
+import org.drools.game.core.api.QueryCommand;
+import org.drools.game.core.api.QueryResult;
 import org.drools.game.model.api.Player;
 import org.drools.game.services.endpoint.api.GameService;
 import org.drools.game.services.infos.GameSessionInfo;
@@ -77,6 +80,13 @@ public class GameServiceImpl implements GameService {
     public void destroy( String sessionId ) {
         GameSession gameSession = games.get( sessionId );        
 		gameSession.destroy();
+	}
+
+	@Override
+	public <T> QueryResult<T> executeQuery(String sessionId, QueryCommand<T> queryCmd) {
+		 GameSession gameSession = games.get( sessionId ); 
+		 T result = gameSession.execute(queryCmd);
+		 return new BaseQueryResult<T>(result);
 	}
 
 }
