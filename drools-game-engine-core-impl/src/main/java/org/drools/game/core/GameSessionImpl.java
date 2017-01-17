@@ -23,6 +23,7 @@ import org.drools.game.core.api.GameConfiguration;
 import org.drools.game.core.api.GameMessage;
 import org.drools.game.core.api.GameMessageService;
 import org.drools.game.core.api.PlayerConfiguration;
+import org.drools.game.core.api.QueryCommand;
 import org.drools.game.model.api.Player;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
@@ -184,6 +185,14 @@ public class GameSessionImpl implements GameSession {
         currentGameSession.fireAllRules();
         return results;
     }
+    
+    
+	@Override
+	public <T> T executeQuery(QueryCommand<T> queryCmd) {
+		return execute(queryCmd);
+	}
+
+    
 
     private void setupGameListeners() {
         currentGameSession.addEventListener( new DefaultAgendaEventListener() );
@@ -345,6 +354,7 @@ public class GameSessionImpl implements GameSession {
         Collection<? extends Object> objects = currentGameSession.getObjects(  new ClassObjectFilter(type) );
         return ( Collection<T> ) objects;
     }
+
     
     
 

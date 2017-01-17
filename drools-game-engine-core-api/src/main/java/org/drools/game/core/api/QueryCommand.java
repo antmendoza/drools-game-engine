@@ -8,9 +8,15 @@ package org.drools.game.core.api;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.WRAPPER_OBJECT;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
 
+import org.drools.game.model.api.Player;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = CLASS, include = WRAPPER_OBJECT)
 public interface QueryCommand<T> extends Command<T> {
 
+	String getQuery();
+
+	Object[] getArguments();
+	
 }

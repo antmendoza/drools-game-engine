@@ -12,6 +12,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.drools.game.capture.flag.cmds.CommandRegistry;
+import org.drools.game.capture.flag.queries.DefaultComandQuery;
+import org.drools.game.model.api.Player;
 import org.drools.game.model.impl.base.BasePlayerImpl;
 import org.drools.game.services.endpoint.api.GameService;
 import org.drools.game.services.endpoint.impl.GameServiceImpl;
@@ -54,13 +56,16 @@ public class GameServiceTest {
         client = ClientBuilder.newBuilder().build();
         final WebTarget webtarget = client.target( APP_URL );
         target = ( ResteasyWebTarget ) webtarget;
-        
+
     }
-    
+
+
     @After
     public void tearDown() throws Exception {
         client.close();
     }
+    
+
     
     @Deployment
     public static Archive createDeployment() throws IllegalArgumentException, Exception {
@@ -146,28 +151,12 @@ public class GameServiceTest {
 		GameService proxy = target.proxy(GameService.class);
 		String playerName = "salaboy";
 
-		
-		
-		
-		
-		
-		final int numberSessions = proxy.getAllGameSessions().size();
-
 		String id = proxy.newGameSession();
-		assertNotNull(id);
-		List<GameSessionInfo> allGameSessions = proxy.getAllGameSessions();
-		assertEquals(1 + numberSessions, allGameSessions.size());
-		GameSessionInfo sessionInfo = filterSessionsById(id, allGameSessions);
-		assertEquals(id, sessionInfo.getId());
-		assertTrue(sessionInfo.getPlayers().isEmpty());
+		BasePlayerImpl player = new BasePlayerImpl(playerName);
+		proxy.joinGameSession(id, player);
 
-		proxy.joinGameSession(id, new BasePlayerImpl(playerName));
-
-		allGameSessions = proxy.getAllGameSessions();
-		assertEquals(1, allGameSessions.size());
-		sessionInfo = allGameSessions.get(0);
-		assertEquals(id, sessionInfo.getId());
-		assertTrue(sessionInfo.getPlayers().contains(playerName));
+		proxy.executeQuery(id,new DefaultComandQuery<Player>(player, "getAllPlayerMessages", "salaboy"));
+		
 
 	}
 	

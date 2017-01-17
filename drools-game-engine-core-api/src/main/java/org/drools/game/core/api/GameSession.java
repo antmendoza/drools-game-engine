@@ -36,6 +36,8 @@ public interface GameSession {
     void destroy();
 
     <T> T execute( Command<T> cmd );
+    
+    <T> T executeQuery( QueryCommand<T> queryCmd );
 
     <T> Collection<T> getGameObjects( Class<T> type );
 

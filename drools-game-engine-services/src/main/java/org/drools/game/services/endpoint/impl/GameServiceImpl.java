@@ -85,8 +85,8 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public <T> QueryResult<T> executeQuery(String sessionId, QueryCommand<T> queryCmd) {
 		 GameSession gameSession = games.get( sessionId ); 
-		 T result = gameSession.execute(queryCmd);
-		 return new BaseQueryResult<T>(result);
+		 QueryResult<T> result = (QueryResult<T>) gameSession.executeQuery(queryCmd);
+		 return result;
 	}
 
 }
